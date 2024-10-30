@@ -89,16 +89,20 @@ def fetch_nfts():
         print("NFTs fetched:", response.result.get("account_nfts", []))
     else:
         print("No NFTs found.")
-    return [nft for nft in response.result.get("account_nfts", []) if nft["issuer"] == issuer_address and nft["nft_taxon"] == int(taxon)]
+    return [
+    nft for nft in response.result.get("account_nfts", [])
+    if nft.get("Issuer") == issuer_address and nft.get("NFTokenTaxon") == int(taxon)
+]
+
 
 # Function to transfer an NFT
 def transfer_nft(nft):
     print(f"Creating offer to transfer NFT {nft['NFTokenID']} to {recipient_address}...")
     offer_create_tx = NFTokenCreateOffer(
         account=address,
-        owner=address,
-        nft_id=nft["NFTokenID"],
+        nftoken_id=nft["NFTokenID"],
         amount="0",
+        flags=1,
         destination=recipient_address
     )
     try:
